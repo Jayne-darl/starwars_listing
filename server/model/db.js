@@ -1,10 +1,16 @@
 const { Pool } = require("pg");
 
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+// const env = process.env.NODE_ENV === 'test' ? process.env.test : process.env.DATABASE_URL;
+
 const credentials = {
     user: "postgres",
     host: "localhost",
-    database: "starwarslisting",
-    password: "transformed",
+    database: process.env.database,
+    password: process.env.password,
     port: 5432,
 };
 

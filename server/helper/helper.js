@@ -1,7 +1,7 @@
 exports.serverError = (response) => {
     response.status(500).json({
         status: response.statusCode,
-        error: 'Something went wrong. Try again later',
+        error: 'INTERNAL_SERVER_ERROR',
     });
 }
 

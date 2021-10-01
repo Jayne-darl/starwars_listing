@@ -73,7 +73,6 @@ class Comment {
             rows.sort((a, b) => {
                 return b["created_on"].getTime() - a["created_on"].getTime()
             })
-            console.log(rows)
             return successResponse(res, 200, rows);
         } catch (err) {
             return serverError(res);

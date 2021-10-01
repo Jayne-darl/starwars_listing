@@ -22,10 +22,9 @@ class Movies {
                         return b["created_on"].getTime() - a["created_on"].getTime()
                     })
                     moviesResult.push({
-                        title: movie.title, opening_crawl: movie.opening_crawl, release_date: movie.release_date, comments: rows, commment_count: rowCount
+                        episode_id: movie.episode_id, title: movie.title, opening_crawl: movie.opening_crawl, release_date: movie.release_date, comments: rows, commment_count: rowCount
                     })
                 } catch (err) {
-                    console.log(err)
                     return serverError(res);
                 }
             });
@@ -53,6 +52,14 @@ class Movies {
                 return clientError(res, 404, ...["status", "ERROR", "error", "NOT_FOUND"]);
             }
             const response = await axios.get("https://swapi.dev/api/films/" + req.params.id);
+            const result = response.data
+            const text = `SELECT * FROM comments WHERE movie_id = '${result.episode_id}' `;
+            const { rows, rowCount } = await db.query(text);
+            rows.sort((a, b) => {
+                return b["created_on"].getTime() - a["created_on"].getTime()
+            })
+            result["comments"] = rows
+            result["comment_count"] = rowCount
             return successResponse(res, 200, response.data);
         } catch (err) {
             return serverError(res);
