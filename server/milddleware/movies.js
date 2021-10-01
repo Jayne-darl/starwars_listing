@@ -18,11 +18,8 @@ class Movies {
                 try {
                     const text = `SELECT * FROM comments WHERE movie_id = '${movie.episode_id}' `;
                     const { rows, rowCount } = await db.query(text);
-                    rows.sort((a, b) => {
-                        return b["created_on"].getTime() - a["created_on"].getTime()
-                    })
                     moviesResult.push({
-                        episode_id: movie.episode_id, title: movie.title, opening_crawl: movie.opening_crawl, release_date: movie.release_date, comments: rows, commment_count: rowCount
+                        episode_id: movie.episode_id, title: movie.title, opening_crawl: movie.opening_crawl, release_date: movie.release_date, comments: rows.length ? rows : [], commment_count: rows.length ? rowCount : 0
                     })
                 } catch (err) {
                     return serverError(res);
@@ -55,11 +52,11 @@ class Movies {
             const result = response.data
             const text = `SELECT * FROM comments WHERE movie_id = '${result.episode_id}' `;
             const { rows, rowCount } = await db.query(text);
-            rows.sort((a, b) => {
-                return b["created_on"].getTime() - a["created_on"].getTime()
-            })
-            result["comments"] = rows
-            result["comment_count"] = rowCount
+
+            if (rows.length > 0) {
+                result["comments"] = rows
+                result["comment_count"] = rowCount
+            }
             return successResponse(res, 200, response.data);
         } catch (err) {
             return serverError(res);
