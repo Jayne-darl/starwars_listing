@@ -52,6 +52,7 @@ class Comment {
             }
             return successResponse(res, 200, rows[0]);
         } catch (err) {
+            console.log(err)
             return serverError(res);
         }
     }
